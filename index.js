@@ -63,7 +63,7 @@ scrapeProducts().catch(err => console.error('Error al inicializar el scraping:',
 // Actualizar productos automáticamente cada 10 minutos
 setInterval(() => {
     scrapeProducts().catch(err => console.error('Error en la actualización programada:', err));
-}, 10 * 60 * 1000); // 10 minutos en milisegundos
+}, 1 * 60 * 1000); // 10 minutos en milisegundos
 
 // Endpoint para obtener productos
 app.get('/products', (req, res) => {
