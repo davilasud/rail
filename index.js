@@ -1,8 +1,17 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
+const cors = require('cors'); // Importar CORS
 
 const app = express();
 const PORT = 3000;
+
+// Configuración de CORS
+const corsOptions = {
+    origin: ['http://localhost', 'https://tu-dominio.com'], // Cambiar por los dominios permitidos
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions)); // Habilitar CORS
 
 let cachedProducts = [];
 let lastUpdated = null;
