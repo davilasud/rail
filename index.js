@@ -10,7 +10,10 @@ let lastUpdated = null;
 const scrapeProducts = async () => {
     try {
         console.log('Iniciando Puppeteer...');
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
         const page = await browser.newPage();
 
         console.log('Navegando a la página...');
