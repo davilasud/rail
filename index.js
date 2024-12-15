@@ -11,21 +11,30 @@ const scrapeProducts = async () => {
     try {
         console.log('Iniciando Puppeteer...');
         const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-});
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
         const page = await browser.newPage();
 
         console.log('Navegando a la página...');
         await page.goto('https://menu.fu.do/ecf2', { waitUntil: 'domcontentloaded' });
 
         console.log('Esperando elementos...');
-        await page.waitForSelector('div.product div h4');
+        await page.waitForSelector('div.product');
 
         console.log('Extrayendo datos...');
         const products = await page.evaluate(() => {
-            return Array.from(document.querySelectorAll('div.product div h4'))
-                .map(el => el.textContent.trim());
+            return Array.from(document.querySelectorAll('div.product')).map(product => {
+                const nameElement = product.querySelector('div h4');
+                const priceElement = product.querySelector('div.product-price span.ng-star-inserted');
+                const imageElement = product.querySelector('img');
+
+                return {
+                    nombre: nameElement ? nameElement.textContent.trim() : null,
+                    precio: priceElement ? priceElement.textContent.trim() : null,
+                    imagen: imageElement ? imageElement.src : null
+                };
+            });
         });
 
         await browser.close();
@@ -45,7 +54,7 @@ scrapeProducts().catch(err => console.error('Error al inicializar el scraping:',
 // Actualizar productos automáticamente cada 10 minutos
 setInterval(() => {
     scrapeProducts().catch(err => console.error('Error en la actualización programada:', err));
-}, 1 * 60 * 1000); // 10 minutos en milisegundos
+}, 10 * 60 * 1000); // 10 minutos en milisegundos
 
 // Endpoint para obtener productos
 app.get('/products', (req, res) => {
