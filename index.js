@@ -7,7 +7,7 @@ const PORT = 3000;
 
 // Configuración de CORS
 const corsOptions = {
-    origin: ['http://localhost', 'https://tu-dominio.com'], // Cambiar por los dominios permitidos
+    origin: ['http://localhost', 'https://panel.floripos.com'], // Cambiar por los dominios permitidos
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -15,8 +15,15 @@ app.use(cors(corsOptions)); // Habilitar CORS
 
 let cachedProducts = [];
 let lastUpdated = null;
+let isScraping = false;
 
 const scrapeProducts = async () => {
+    if (isScraping) {
+        console.log('Ya hay un scraping en curso. Abortando...');
+        return;
+    }
+
+    isScraping = true;
     try {
         console.log('Iniciando Puppeteer...');
         const browser = await puppeteer.launch({
@@ -54,6 +61,8 @@ const scrapeProducts = async () => {
         console.log('Productos actualizados:', cachedProducts);
     } catch (error) {
         console.error('Error durante el scraping:', error);
+    } finally {
+        isScraping = false;
     }
 };
 
@@ -63,7 +72,7 @@ scrapeProducts().catch(err => console.error('Error al inicializar el scraping:',
 // Actualizar productos automáticamente cada 10 minutos
 setInterval(() => {
     scrapeProducts().catch(err => console.error('Error en la actualización programada:', err));
-}, 1 * 60 * 1000); // 10 minutos en milisegundos
+}, 10 * 60 * 1000); // 10 minutos en milisegundos
 
 // Endpoint para obtener productos
 app.get('/products', (req, res) => {
@@ -74,12 +83,23 @@ app.get('/products', (req, res) => {
     }
 });
 
-// Endpoint para forzar el scraping manualmente
-app.get('/scrape', async (req, res) => {
-    await scrapeProducts();
-    res.json({ success: true, products: cachedProducts });
+// Ruta para disparar scraping manual
+app.get('/update-products', async (req, res) => {
+    if (isScraping) {
+        return res.status(429).json({ message: 'El scraping ya está en curso. Por favor, espera a que finalice.' });
+    }
+
+    try {
+        await scrapeProducts();
+        res.json({ message: 'Los productos se han actualizado exitosamente.', products: cachedProducts, lastUpdated });
+    } catch (error) {
+        console.error('Error durante la actualización manual:', error);
+        res.status(500).json({ message: 'Ocurrió un error durante la actualización.' });
+    }
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
+
 });
