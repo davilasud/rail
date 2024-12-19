@@ -70,9 +70,9 @@ const scrapeProducts = async () => {
 scrapeProducts().catch(err => console.error('Error al inicializar el scraping:', err));
 
 // Actualizar productos automáticamente cada 10 minutos
-setInterval(() => {
-    scrapeProducts().catch(err => console.error('Error en la actualización programada:', err));
-}, 10 * 60 * 1000); // 10 minutos en milisegundos
+//setInterval(() => {
+//    scrapeProducts().catch(err => console.error('Error en la actualización programada:', err));
+//}, 10 * 60 * 1000); // 10 minutos en milisegundos
 
 // Endpoint para obtener productos
 app.get('/products', (req, res) => {
