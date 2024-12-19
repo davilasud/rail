@@ -84,7 +84,7 @@ app.get('/products', (req, res) => {
 });
 
 // Ruta para disparar scraping manual
-app.get('/update-products', async (req, res) => {
+app.get('/scrape', async (req, res) => {
     if (isScraping) {
         return res.status(429).json({ message: 'El scraping ya está en curso. Por favor, espera a que finalice.' });
     }
