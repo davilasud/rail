@@ -7,7 +7,7 @@ const PORT = 3000;
 
 // Configuración de CORS
 const corsOptions = {
-    origin: ['http://localhost', 'https://panel.floripos.com', 'http://192.168.1.68'], // Cambiar por los dominios permitidos
+    origin: ['http://localhost', 'https://panel.floripos.com', 'https://tapachula.enamoraconflores.com'], // Cambiar por los dominios permitidos
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
