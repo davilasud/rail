@@ -7,7 +7,7 @@ const PORT = 3000;
 
 // Configuración de CORS
 const corsOptions = {
-    origin: ['*'], // Cambiar por los dominios permitidos
+    origin: ['http://localhost/'], // Cambiar por los dominios permitidos
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
