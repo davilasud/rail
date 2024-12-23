@@ -7,7 +7,7 @@ const PORT = 3000;
 
 // Configuración de CORS
 const corsOptions = {
-    origin: ['https://tapachula.enamoraconflores.com'], // Cambiar por los dominios permitidos
+    origin: ['https://tapachula.enamoraconflores.com','https://panel.enamoraconflores.com'], // Cambiar por los dominios permitidos
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
